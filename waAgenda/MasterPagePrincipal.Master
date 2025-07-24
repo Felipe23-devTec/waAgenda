@@ -1,0 +1,56 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="MasterPagePrincipal.master.cs" Inherits="waAgenda.MasterPagePrincipal" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+    <link href="lib/css/index.css" rel="stylesheet" />
+    <style>
+        .centered-table {
+            margin: auto;
+            border-collapse: collapse;
+        }
+        .centered-table th, .centered-table td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <header><h1>Agenda</h1></header>
+        <nav><asp:Menu ID="Menu1" runat="server" BackColor="#F7F6F3" DynamicHorizontalOffset="2" Font-Names="Verdana" Font-Size="Medium" ForeColor="#7C6F57" Orientation="Horizontal" StaticSubMenuIndent="10px" OnMenuItemClick="Menu1_MenuItemClick">
+            <DynamicHoverStyle BackColor="#7C6F57" ForeColor="White" />
+            <DynamicMenuItemStyle HorizontalPadding="5px" VerticalPadding="2px" />
+            <DynamicMenuStyle BackColor="#F7F6F3" />
+            <DynamicSelectedStyle BackColor="#5D7B9D" />
+            <Items>
+                <asp:MenuItem Text="Usuários" Value="Usuários">
+                    <asp:MenuItem Text="teste" Value="teste"></asp:MenuItem>
+                </asp:MenuItem>
+                <asp:MenuItem Text="Home" Value="Home"></asp:MenuItem>
+            </Items>
+            <StaticHoverStyle BackColor="#7C6F57" ForeColor="White" />
+            <StaticMenuItemStyle HorizontalPadding="5px" VerticalPadding="2px" />
+            <StaticSelectedStyle BackColor="#5D7B9D" />
+            </asp:Menu>
+        </nav>
+        <main>
+            <div>
+                <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                    
+                </asp:ContentPlaceHolder>
+            </div>
+        </main>
+        <footer>
+            <br />
+            Desenvolvido por <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="https://google.com.br" Target="_blank">Felipe</asp:HyperLink>
+        </footer>
+    </form>
+</body>
+</html>

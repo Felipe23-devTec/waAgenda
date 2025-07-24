@@ -1,0 +1,16 @@
+﻿.gridview th{
+    font-size: medium;
+    color: black;
+    background-color: #ccc;
+    padding: 4px;
+}
+
+.gridview td {
+    font-size: 10px;
+    padding: 5px;
+    text-align:center;
+}
+.teste {
+    border-radius: 25px;
+    background: darkgrey;
+}
