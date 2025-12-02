@@ -1,9 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Xml.Schema;
+using System.Xml;
+using System.Xml.Serialization;
+using waAgenda.classes;
+using static waAgenda.WebForm1;
+using System.Data.SqlTypes;
 
 namespace waAgenda
 {
@@ -31,6 +38,22 @@ namespace waAgenda
                 ViewState["Clientes"] = value;
             }
         }
+
+        //Criando view state para operadores, exemplo de uso de Dual list
+
+        protected Dictionary<string, string> OperadoresDisponiveis
+        {
+            get
+            {
+                if (ViewState["OperadoresDisponiveis"] == null)
+                    ViewState["OperadoresDisponiveis"] = new Dictionary<string, string>();
+                return (Dictionary<string, string>)ViewState["OperadoresDisponiveis"];
+            }
+            set
+            {
+                ViewState["OperadoresDisponiveis"] = value;
+            }
+        }
         protected void Page_Load(object sender, EventArgs e)
         {
             ValidarCampo();
@@ -39,6 +62,12 @@ namespace waAgenda
                 CarregarCombos();
                 gvCooperado.DataSource = new List<object>();
                 gvCooperado.DataBind();
+
+                lstOrigem.Items.Add(new ListItem("0001 -tes", "0001"));
+                lstOrigem.Items.Add(new ListItem("Item 2", "2"));
+                lstOrigem.Items.Add(new ListItem("Item 3", "3"));
+
+                CarregarOperadores();
 
             }
             
@@ -57,6 +86,26 @@ namespace waAgenda
         {
             if (Page.IsValid)
             {
+
+                //gerar Xml e validar com XSD
+
+                Pessoa pessoa = new Pessoa();
+                pessoa.Nome = "Felipe";
+                pessoa.IdadeNova = 25;
+                string xml = string.Empty;
+                XmlSerializer serializer = new XmlSerializer(typeof(Pessoa));
+                using (var sw = new StringWriter())
+                {
+                    serializer.Serialize(sw, pessoa);
+                    xml = sw.ToString();
+                }
+                string xsdPath = "C:\\xsd\\cliente.xsd";
+
+                // 🔹 Valida o XML em memória
+                ValidarXml(xml, xsdPath);
+
+
+
                 string valorSelecionado = ddlTipoPessoa.SelectedValue;
                 string textoSelecionado = ddlTipoPessoa.SelectedItem.Text;
                 var indexCooperado = !string.IsNullOrEmpty(lblLinhaCooperado.Text) ? Convert.ToInt16(lblLinhaCooperado.Text) : 0;
@@ -100,6 +149,26 @@ namespace waAgenda
                     btnInserir.Text = "Inserir";
                     btnCancelar_Click(null, null);
                 }
+
+                var operadores = new Dictionary<string, string>()
+                {
+                    { "001", "DIGIO" },
+                    { "002", "Marcos" },
+                    { "003", "Digio 12" },
+                    { "004", "Digio 3" }
+                };
+
+                var listaDestino = new Dictionary<string, string>()
+                {
+                    { "002", "Marcos" },   // já existe
+                    { "005", "Novo Operador" } // item que não existe em operadores
+                };
+
+                
+
+                
+
+
 
 
 
@@ -173,6 +242,56 @@ namespace waAgenda
         {
             txtCpfCnpj.Enabled = habilitar;
             ddlTipoPessoa.Enabled = habilitar;
+        }
+
+        static void ValidarXml(string xmlString, string xsdPath)
+        {
+            var schemas = new XmlSchemaSet();
+            schemas.Add(null, xsdPath);
+
+            var doc = new XmlDocument();
+            doc.LoadXml(xmlString);
+
+            doc.Schemas = schemas;
+
+            doc.Validate((s, e) =>
+            {
+                Console.WriteLine($"❌ Erro: {e.Message}");
+                throw new Exception($"Erro: {e.Message}");
+            });
+        }
+        private static void ValidationEventHandler(object sender, ValidationEventArgs e)
+        {
+            Console.WriteLine($"Erro de validação: {e.Message}");
+        }
+
+        private void CarregarOperadores()
+        {
+            //lstOrigem.Items.Clear();
+            lstDestino.Items.Clear();
+
+
+            //lista de todos os operadores na base
+            Dictionary<string,string> operadoresTotais = new Dictionary<string,string>();
+            operadoresTotais.Add("0001", "Operador 1");
+            operadoresTotais.Add("0002", "Operador 2");
+            operadoresTotais.Add("0003", "Operador 3");
+
+            if (!operadoresTotais.ContainsKey("0004"))
+            {
+                Console.WriteLine($"Key is {0004} not found.");
+            }
+
+            //Aicionando todos os que ainda não tem na lista
+            foreach (KeyValuePair<string, string> operador in operadoresTotais)
+            {
+                //Metodo para verificar se existe no tipo ListItem o valor contendo na chave do dicionario 
+                var teste = lstOrigem.Items.FindByValue(operador.Key);
+                if (lstOrigem.Items.FindByValue(operador.Key) == null)
+                {
+                    lstOrigem.Items.Add(new ListItem(string.Concat(operador.Key, " - ", operador.Value), operador.Key));
+                }
+            }
         }
 
 

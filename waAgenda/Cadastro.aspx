@@ -103,6 +103,25 @@
                         </tbody>
                     </table>
                 </tr>
+                <tr>
+                    <td>
+                        <asp:ListBox ID="lstOrigem" runat="server" SelectionMode="Multiple" Width="150px" Height="100px"></asp:ListBox>
+
+                        
+
+                        
+                    </td>
+                    <td>
+                        <div>
+                            <asp:Button ID="btnAdicionar" runat="server" Text="&gt;" />
+                            <asp:Button ID="btnRemover" runat="server" Text="&lt;"/>
+                        </div>
+                    </td>
+                    <td>
+                        <asp:ListBox ID="lstDestino" runat="server" SelectionMode="Multiple" Width="150px" Height="100px"></asp:ListBox>
+                    </td>
+                    
+                </tr>
             </tbody>
         </table>
     </div>

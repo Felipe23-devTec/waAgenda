@@ -79,6 +79,7 @@
     <Content Include="Cadastro.aspx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\Pessoa.cs" />
     <Compile Include="DataAcess\DataAcess.cs" />
     <Compile Include="index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
